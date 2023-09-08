@@ -10,7 +10,7 @@ const CreateTask = () => {
     description: '',
     dueDate: '',
     priorityLevel: '',
-    status: null,
+    status: 'Inprogress',
     teamMembers: [],
     taskCreator: loginUserInfo?.email,
   })
