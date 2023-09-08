@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import { Link, json, useNavigate } from 'react-router-dom'
 
@@ -7,22 +7,24 @@ const Home = () => {
   const users = JSON.parse(localStorage.getItem('users'))
 
   const allTask = JSON.parse(localStorage.getItem('allTask'))
+
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedTeamMembers, setSelectedTeamMembers] = useState([])
 
-  // handle status change
+  // (completed, in progress, pending)
+  const [statusCondition, setStatusCondition] = useState(null)
 
+  useEffect(() => {
+    console.log(statusCondition)
+  }, [statusCondition])
+
+  // handle status change
   const handleStatusChange = (e) => {
     const remainingTask = allTask.filter(
       (task) => task?.title !== selectedTask?.title
     )
-
     selectedTask.status = e.target.value
-
-    console.log('Now Selected TAsk :', selectedTask)
-    console.log('remaing task ', remainingTask)
     remainingTask.push(selectedTask)
-
     localStorage.setItem('allTask', JSON.stringify(remainingTask))
     navigate('/')
   }
@@ -56,11 +58,50 @@ const Home = () => {
 
   return (
     <div className='container mx-auto'>
-      <Navbar></Navbar>
-
       <div className='mt-10'>
         <h1 className='text-2xl font-bold mb-4'>All available tasks</h1>
-        {allTask?.length > 0 ? (
+
+        <div className='bg-gray-300 p-6 rounded-md flex justify-between'>
+          <div>
+            <h1 className='py-2'>Show based on status</h1>
+            <select
+              onChange={(e) => {
+                setStatusCondition(e.target.value)
+              }}
+              defaultValue={null}
+              className='select w-full max-w-xs'
+            >
+              <option value={null}>All</option>
+              <option>Inprogress</option>
+              <option>Completed</option>
+            </select>
+          </div>
+
+          <div>
+            <h1 className='py-2'>Show based on priority</h1>
+            <select
+              onChange={(e) => {
+                setStatusCondition(e.target.value)
+              }}
+              className='select w-full max-w-xs'
+            >
+              <option defaultChecked>All</option>
+              <option>High</option>
+              <option>normal</option>
+              <option>optional</option>
+            </select>
+          </div>
+        </div>
+
+        {allTask?.filter((task) => {
+          if (statusCondition === 'Inprogress') {
+            return task.status === 'Inprogress'
+          } else if (statusCondition === 'Completed') {
+            return task?.status === 'Completed'
+          } else {
+            return task
+          }
+        }).length > 0 ? (
           <div className='overflow-x-auto'>
             <table
               style={{ width: '900px' }}
@@ -70,6 +111,7 @@ const Home = () => {
               <thead>
                 <tr>
                   <th className='p-2'>Task Name</th>
+                  <th className='p-2'>Task Creator</th>
                   <th className='p-2'>Due Date</th>
                   <th className='p-2'>Priority</th>
                   <th className='p-2'>Status</th>
@@ -80,6 +122,9 @@ const Home = () => {
                 {allTask?.map((task, index) => (
                   <tr key={index} className='bg-gray-100'>
                     <td className='p-2'>{task?.title}</td>
+                    <td className='p-2'>
+                      {task?.taskCreator ? task?.taskCreator : 'NA'}
+                    </td>
                     <td className='p-2'>{task?.dueDate}</td>
                     <td className='p-2'>{task?.priorityLevel}</td>
                     <td className='p-2'>
@@ -91,6 +136,7 @@ const Home = () => {
                         defaultValue={task?.status}
                         className='select w-full max-w-xs'
                       >
+                        <option disabled>{task?.status}</option>
                         <option>Inprogress</option>
                         <option>Completed</option>
                       </select>
@@ -99,16 +145,24 @@ const Home = () => {
                     </td>
                     <td className='p-2'>
                       {task?.teamMembers?.length === 0 ? (
-                        <button
-                          className='btn btn-primary'
-                          // onClick={() => setAssignMod((prev) => !prev)}
-                          onClick={() => {
-                            setSelectedTask(task)
-                            document.getElementById('my_modal_1').showModal()
-                          }}
-                        >
-                          Assign team
-                        </button>
+                        <div>
+                          {task?.taskCreator === loginUserInfo?.email ? (
+                            <button
+                              className='btn btn-primary'
+                              // onClick={() => setAssignMod((prev) => !prev)}
+                              onClick={() => {
+                                setSelectedTask(task)
+                                document
+                                  .getElementById('my_modal_1')
+                                  .showModal()
+                              }}
+                            >
+                              Assign team
+                            </button>
+                          ) : (
+                            'Only task creator can assign a team'
+                          )}
+                        </div>
                       ) : (
                         <button
                           onClick={() => {

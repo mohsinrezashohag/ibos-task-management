@@ -30,16 +30,6 @@ const Login = () => {
         alert('user not registered. please register first')
       }
     }
-
-    // if (
-    //   userInfo.email === loginInfo.email &&
-    //   userInfo.password === loginInfo.password
-    // ) {
-    //   localStorage.setItem('loginUser', JSON.stringify(userInfo))
-    //   navigate('/')
-    // } else {
-    //   alert('password is wrong')
-    // }
   }
   return (
     <section className='max-width flex-evenly items-center'>
@@ -61,7 +51,7 @@ const Login = () => {
                 onChange={(e) =>
                   setLoginInfo({ ...loginInfo, password: e.target.value })
                 }
-                type='text'
+                type='password'
                 placeholder='Password'
                 className='py-4  my-5 input-border w-[500px]  px-3'
               />

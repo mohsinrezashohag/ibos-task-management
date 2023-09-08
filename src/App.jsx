@@ -4,8 +4,6 @@ import Home from './pages/Home'
 import Register from './pages/Register'
 import PrivateRoute from './routeAuth/PrivateRoute'
 import PublicRoute from './routeAuth/PublicRoute'
-import Profile from './pages/Profile'
-import CreateTask from './pages/CreateTask'
 
 function App() {
   return (
@@ -34,22 +32,6 @@ function App() {
               <PublicRoute>
                 <Register></Register>
               </PublicRoute>
-            }
-          ></Route>
-          <Route
-            path='/see-profile'
-            element={
-              <PrivateRoute>
-                <Profile></Profile>
-              </PrivateRoute>
-            }
-          ></Route>
-          <Route
-            path='/create-task'
-            element={
-              <PrivateRoute>
-                <CreateTask></CreateTask>
-              </PrivateRoute>
             }
           ></Route>
         </Routes>

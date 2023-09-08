@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 const CreateTask = () => {
+  const loginUserInfo = JSON.parse(localStorage.getItem('loginUser'))
+
   const [taskInfo, setTaskInfo] = useState({
     title: '',
     description: '',
@@ -9,6 +11,7 @@ const CreateTask = () => {
     priorityLevel: '',
     status: null,
     teamMembers: [],
+    taskCreator: loginUserInfo?.email,
   })
 
   const navigate = useNavigate()

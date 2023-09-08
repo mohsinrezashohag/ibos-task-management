@@ -14,7 +14,7 @@ const Profile = () => {
 
   // my assigned task
   const allTask = JSON.parse(localStorage.getItem('allTask'))
-  const myTasks = allTask.filter((task) =>
+  const myTasks = allTask?.filter((task) =>
     task?.teamMembers.includes(detailsInfo.email)
   )
 
@@ -22,7 +22,7 @@ const Profile = () => {
   const [selectedTask, setSelectedTask] = useState(null)
 
   const users = JSON.parse(localStorage.getItem('users'))
-  const systemUsers = users.filter(
+  const systemUsers = users?.filter(
     (user) => user?.email !== loginUserInfo?.email
   )
   const handleInvitationSend = (user) => {
@@ -32,12 +32,39 @@ const Profile = () => {
     const invitedUsers = []
     console.log(user)
     const invitation_Info = {
+      invitedBy: detailsInfo?.email,
       invitedTaskTitle: selectedTask?.title,
       invitedTaskTo: [...invitedUsers, user],
     }
-
-    localStorage.setItem('invitations', JSON.stringify(invitation_Info))
+    invitedUsers.push(invitation_Info)
+    localStorage.setItem('invitations', JSON.stringify(invitedUsers))
     navigate('/see-profile')
+  }
+
+  // my invitations
+  const myInvitations = JSON.parse(localStorage.getItem('invitations'))?.filter(
+    (item) => item.invitedTaskTo.includes(detailsInfo?.email)
+  )
+
+  // accept invitations functionalities
+  const handleAcceptInvitations = (InvitedTask) => {
+    const allTask = JSON.parse(localStorage.getItem('allTask'))
+    const invitedActualTask = allTask.find(
+      (task) => task?.title === InvitedTask?.invitedTaskTitle
+    )
+    invitedActualTask.teamMembers.push(...InvitedTask.invitedTaskTo)
+    const remainingTask = allTask.filter(
+      (task) => task?.title !== InvitedTask?.invitedTaskTitle
+    )
+    remainingTask.push(invitedActualTask)
+    localStorage.setItem('allTask', JSON.stringify(remainingTask))
+
+    myInvitations.filter(
+      (item) => item?.invitedTaskTitle !== InvitedTask?.invitedTaskTitle
+    )
+    localStorage.setItem('invitations', JSON.stringify(myInvitations))
+
+    navigate('/')
   }
 
   // logout functionality
@@ -88,7 +115,9 @@ const Profile = () => {
 
       <div>
         <div>
-          <h1>My Assigned Task</h1>
+          <h1 className='uppercase text-2xl font-bold  my-4'>
+            My Assigned Task
+          </h1>
           {myTasks?.length > 0 ? (
             <div className='overflow-x-auto'>
               <table
@@ -201,7 +230,55 @@ const Profile = () => {
               </dialog>
             </div>
           ) : (
-            <h1 className='text-3xl text-red-500'> No task assigned to you</h1>
+            <h1 className='text-3xl text-red-500 my-8'>
+              {' '}
+              No task assigned to you
+            </h1>
+          )}
+        </div>
+
+        <div>
+          <h1 className='uppercase text-2xl font-bold  my-4'>
+            Pending Invitations
+          </h1>
+          {myInvitations?.length > 0 ? (
+            <div>
+              <table
+                style={{ width: '900px' }}
+                className='w-full table-auto text-left'
+              >
+                <thead>
+                  <tr>
+                    <th className='p-2'>Task Name</th>
+                    <th className='p-2'>Invited By</th>
+                    <th className='p-2'>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {myInvitations?.map((item, index) => (
+                    <tr key={index} className='bg-gray-100'>
+                      <td className='p-2'>{item?.invitedTaskTitle}</td>
+                      <td className='p-2'>
+                        <p>user name</p>
+                      </td>
+                      <td className='p-2'>
+                        <button
+                          onClick={() => handleAcceptInvitations(item)}
+                          className='btn btn-primary me-4'
+                        >
+                          Accept
+                        </button>
+                        <button className='btn btn-error'>reject</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <h1 className='text-3xl text-red-500 my-8'>
+              No Pending Invitations
+            </h1>
           )}
         </div>
       </div>
