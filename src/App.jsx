@@ -1,6 +1,8 @@
 import { BrowserRouter, Router, Route, Link, Routes } from 'react-router-dom'
 import Login from './pages/Login'
 import Home from './pages/Home'
+import Profile from './pages/Profile'
+import CreateTask from './pages/CreateTask'
 import Register from './pages/Register'
 import PrivateRoute from './routeAuth/PrivateRoute'
 import PublicRoute from './routeAuth/PublicRoute'
@@ -32,6 +34,24 @@ function App() {
               <PublicRoute>
                 <Register></Register>
               </PublicRoute>
+            }
+          ></Route>
+
+          <Route
+            path='/see-profile'
+            element={
+              <PrivateRoute>
+                <Profile></Profile>
+              </PrivateRoute>
+            }
+          ></Route>
+
+          <Route
+            path='/create-task'
+            element={
+              <PrivateRoute>
+                <CreateTask></CreateTask>
+              </PrivateRoute>
             }
           ></Route>
         </Routes>

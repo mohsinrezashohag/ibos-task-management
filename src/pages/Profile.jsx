@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import avatar from '../assets/avatar.png'
+import Navbar from '../components/Navbar'
 
 const Profile = () => {
   const navigate = useNavigate()
@@ -75,214 +76,217 @@ const Profile = () => {
   }
 
   return (
-    <div className='flex justify-evenly items-center h-screen'>
-      <div className='flex flex-col'>
-        <img
-          className='rounded-md'
-          src={userImage ? userImage : avatar}
-          alt=''
-          width='200px'
-        />
-        <div className=' mt-6'>
-          <h2>
-            <span className='font-bold'>Your Email :</span> <br />{' '}
-            {detailsInfo.email}
-          </h2>
+    <>
+      <Navbar></Navbar>
+      <div className='flex justify-evenly items-center h-screen'>
+        <div className='flex flex-col'>
+          <img
+            className='rounded-md'
+            src={userImage ? userImage : avatar}
+            alt=''
+            width='200px'
+          />
+          <div className=' mt-6'>
+            <h2>
+              <span className='font-bold'>Your Email :</span> <br />{' '}
+              {detailsInfo.email}
+            </h2>
 
-          <h5>
-            <span className='font-bold'>Your Bio :</span> <br />{' '}
-            {detailsInfo.bio}
-          </h5>
-        </div>
-        <div>
-          <button
-            onClick={() => handleLogout()}
-            className='btn btn-error inline-block w-32 mt-10'
-          >
-            Logout
-          </button>
-          <Link to='/'>
-            {' '}
+            <h5>
+              <span className='font-bold'>Your Bio :</span> <br />{' '}
+              {detailsInfo.bio}
+            </h5>
+          </div>
+          <div>
             <button
-              className='btn btn-link
-             inline-block  mt-10'
+              onClick={() => handleLogout()}
+              className='btn btn-error inline-block w-32 mt-10'
             >
-              Back in home page
+              Logout
             </button>
-          </Link>
-        </div>
-      </div>
-
-      <div>
-        <div>
-          <h1 className='uppercase text-2xl font-bold  my-4'>
-            My Assigned Task
-          </h1>
-          {myTasks?.length > 0 ? (
-            <div className='overflow-x-auto'>
-              <table
-                style={{ width: '900px' }}
-                className='w-full table-auto text-left'
+            <Link to='/'>
+              {' '}
+              <button
+                className='btn btn-link
+             inline-block  mt-10'
               >
-                {/* head */}
-                <thead>
-                  <tr>
-                    <th className='p-2'>Task Name</th>
-                    <th className='p-2'>Due Date</th>
-                    <th className='p-2'>Priority</th>
-                    <th className='p-2'>Status</th>
-                    <th className='p-2'>Current Team</th>
-                    <th className='p-2'>Make Team</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {myTasks?.map((task, index) => (
-                    <tr key={index} className='bg-gray-100'>
-                      <td className='p-2'>{task?.title}</td>
-                      <td className='p-2'>{task?.dueDate}</td>
-                      <td className='p-2'>{task?.priorityLevel}</td>
-                      <td className='p-2'>
-                        {task?.status ? task?.status : 'NA'}
-                      </td>
-                      <td className='p-2'>
-                        {task?.teamMembers.map((member, index) => (
-                          <>
-                            <p key={index}>{member}</p>
-                            <br />
-                          </>
-                        ))}
-                      </td>
+                Back in home page
+              </button>
+            </Link>
+          </div>
+        </div>
 
-                      <td className='p-2'>
-                        <button
-                          onClick={() => {
-                            setSelectedTask(task)
-                            document.getElementById('my_modal_1').showModal()
-                          }}
-                          className='btn btn-primary'
-                        >
-                          Make team or invite a team mate
-                        </button>
-                      </td>
+        <div>
+          <div>
+            <h1 className='uppercase text-2xl font-bold  my-4'>
+              My Assigned Task
+            </h1>
+            {myTasks?.length > 0 ? (
+              <div className='overflow-x-auto'>
+                <table
+                  style={{ width: '900px' }}
+                  className='w-full table-auto text-left'
+                >
+                  {/* head */}
+                  <thead>
+                    <tr>
+                      <th className='p-2'>Task Name</th>
+                      <th className='p-2'>Due Date</th>
+                      <th className='p-2'>Priority</th>
+                      <th className='p-2'>Status</th>
+                      <th className='p-2'>Current Team</th>
+                      <th className='p-2'>Make Team</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {myTasks?.map((task, index) => (
+                      <tr key={index} className='bg-gray-100'>
+                        <td className='p-2'>{task?.title}</td>
+                        <td className='p-2'>{task?.dueDate}</td>
+                        <td className='p-2'>{task?.priorityLevel}</td>
+                        <td className='p-2'>
+                          {task?.status ? task?.status : 'NA'}
+                        </td>
+                        <td className='p-2'>
+                          {task?.teamMembers.map((member, index) => (
+                            <>
+                              <p key={index}>{member}</p>
+                              <br />
+                            </>
+                          ))}
+                        </td>
 
-              <dialog id='my_modal_1' className='modal'>
-                <div className='modal-box'>
-                  <h3 className='font-bold text-lg'>
-                    Sent Invitation for task :{' '}
-                    <span className='text-normal'>{selectedTask?.title}</span>
-                  </h3>
+                        <td className='p-2'>
+                          <button
+                            onClick={() => {
+                              setSelectedTask(task)
+                              document.getElementById('my_modal_1').showModal()
+                            }}
+                            className='btn btn-primary'
+                          >
+                            Make team or invite a team mate
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
 
-                  <div>
-                    <h1>Users to the system are not in team</h1>
+                <dialog id='my_modal_1' className='modal'>
+                  <div className='modal-box'>
+                    <h3 className='font-bold text-lg'>
+                      Sent Invitation for task :{' '}
+                      <span className='text-normal'>{selectedTask?.title}</span>
+                    </h3>
 
                     <div>
-                      {systemUsers ? (
-                        <div className='overflow-x-auto'>
-                          <table className='table'>
-                            {/* head */}
-                            <thead>
-                              <tr>
-                                <th>Name</th>
-                                <th>Sent invitation</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {systemUsers?.map((user, index) => (
-                                <tr key={index}>
-                                  <td>{user?.email}</td>
-                                  <td>
-                                    <button
-                                      onClick={() =>
-                                        handleInvitationSend(
-                                          (user = user.email)
-                                        )
-                                      }
-                                      className='btn btn-primary'
-                                    >
-                                      sent invitation
-                                    </button>
-                                  </td>
+                      <h1>Users to the system are not in team</h1>
+
+                      <div>
+                        {systemUsers ? (
+                          <div className='overflow-x-auto'>
+                            <table className='table'>
+                              {/* head */}
+                              <thead>
+                                <tr>
+                                  <th>Name</th>
+                                  <th>Sent invitation</th>
                                 </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      ) : (
-                        <h1 className='text-red-500 my-2'>
-                          There is no others users to invite
-                        </h1>
-                      )}
+                              </thead>
+                              <tbody>
+                                {systemUsers?.map((user, index) => (
+                                  <tr key={index}>
+                                    <td>{user?.email}</td>
+                                    <td>
+                                      <button
+                                        onClick={() =>
+                                          handleInvitationSend(
+                                            (user = user.email)
+                                          )
+                                        }
+                                        className='btn btn-primary'
+                                      >
+                                        sent invitation
+                                      </button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        ) : (
+                          <h1 className='text-red-500 my-2'>
+                            There is no others users to invite
+                          </h1>
+                        )}
+                      </div>
+                    </div>
+                    <p className='py-4'>
+                      Press ESC key or click the button below to close
+                    </p>
+                    <div className='modal-action'>
+                      <form method='dialog'>
+                        <button className='btn'>Close</button>
+                      </form>
                     </div>
                   </div>
-                  <p className='py-4'>
-                    Press ESC key or click the button below to close
-                  </p>
-                  <div className='modal-action'>
-                    <form method='dialog'>
-                      <button className='btn'>Close</button>
-                    </form>
-                  </div>
-                </div>
-              </dialog>
-            </div>
-          ) : (
-            <h1 className='text-3xl text-red-500 my-8'>
-              {' '}
-              No task assigned to you
-            </h1>
-          )}
-        </div>
+                </dialog>
+              </div>
+            ) : (
+              <h1 className='text-3xl text-red-500 my-8'>
+                {' '}
+                No task assigned to you
+              </h1>
+            )}
+          </div>
 
-        <div>
-          <h1 className='uppercase text-2xl font-bold  my-4'>
-            Pending Invitations
-          </h1>
-          {myInvitations?.length > 0 ? (
-            <div>
-              <table
-                style={{ width: '900px' }}
-                className='w-full table-auto text-left'
-              >
-                <thead>
-                  <tr>
-                    <th className='p-2'>Task Name</th>
-                    <th className='p-2'>Invited By</th>
-                    <th className='p-2'>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {myInvitations?.map((item, index) => (
-                    <tr key={index} className='bg-gray-100'>
-                      <td className='p-2'>{item?.invitedTaskTitle}</td>
-                      <td className='p-2'>
-                        <p>user name</p>
-                      </td>
-                      <td className='p-2'>
-                        <button
-                          onClick={() => handleAcceptInvitations(item)}
-                          className='btn btn-primary me-4'
-                        >
-                          Accept
-                        </button>
-                        <button className='btn btn-error'>reject</button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <h1 className='text-3xl text-red-500 my-8'>
-              No Pending Invitations
+          <div>
+            <h1 className='uppercase text-2xl font-bold  my-4'>
+              Pending Invitations
             </h1>
-          )}
+            {myInvitations?.length > 0 ? (
+              <div>
+                <table
+                  style={{ width: '900px' }}
+                  className='w-full table-auto text-left'
+                >
+                  <thead>
+                    <tr>
+                      <th className='p-2'>Task Name</th>
+                      <th className='p-2'>Invited By</th>
+                      <th className='p-2'>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {myInvitations?.map((item, index) => (
+                      <tr key={index} className='bg-gray-100'>
+                        <td className='p-2'>{item?.invitedTaskTitle}</td>
+                        <td className='p-2'>
+                          <p>user name</p>
+                        </td>
+                        <td className='p-2'>
+                          <button
+                            onClick={() => handleAcceptInvitations(item)}
+                            className='btn btn-primary me-4'
+                          >
+                            Accept
+                          </button>
+                          <button className='btn btn-error'>reject</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <h1 className='text-3xl text-red-500 my-8'>
+                No Pending Invitations
+              </h1>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
